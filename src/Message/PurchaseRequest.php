@@ -3,89 +3,96 @@
 namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
-use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\YooKassa\AuthParameters;
-use Throwable;
-use YooKassa\Client;
+use Omnipay\YooKassa\Customer;
+use Omnipay\YooKassa\Item;
+use Omnipay\YooKassa\LocaleParametersTrait;
 
 
-class PurchaseRequest extends AbstractRequest
+class PurchaseRequest extends Request
 {
-    use AuthParameters;
+    use LocaleParametersTrait;
+
+    protected string|null $method = 'createPayment';
 
 
-    public function getData()
+    public function getCapture()
     {
-        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description', 'items', 'customer');
+        $capture = $this->getParameter('capture');
 
-        $data = [
-            'amount' => $this->getAmount(),
-            'currency' => $this->getCurrency(),
-            'description' => $this->getDescription(),
-            'return_url' => $this->getReturnUrl(),
-            'transactionId' => $this->getTransactionId(),
-            'items' => $this->getItems(),
-            // 'customer' => $this->getCustomer(),
-        ];
+        return $capture === null ? true : $capture;
+    }
 
-        return [
-            'payment' => [
-                'amount' => [
-                    'value' => $data['amount'],
-                    'currency' => $data['currency'],
-                ],
-                'description' => $data['description'],
-                'confirmation' => [
-                    'type' => 'redirect',
-                    'return_url' => $data['return_url'],
-                ],
-                'metadata' => [
-                    'transactionId' => $data['transactionId'],
-                ],
-                'receipt' => [
-                    'customer' => $data['customer'],
-//                    'items' => array_map(function (ItemInterface $item) {
-//                        return [
-//                            'description' => $item->getDescription(),
-//                            'quantity' => $item->getQuantity(),
-//                            'amount' => [
-//                                'value' => round($item->getPrice(), 2),
-//                                'currency' => 'RUB',
-//                            ],
-//                            'vat_code' => $item->getVatCode(),
-//                            'payment_mode' => $item->getPaymentMode(),
-//                            'payment_subject' => $item->getPaymentSubject(),
-//                        ];
-//                    }, $data['items']->all()),
-                ],
-            ],
-            'idempotencyKey' => $this->makeIdempotencyKey($data)
-        ];
+
+    public function setCapture($value): self
+    {
+        return $this->setParameter('capture', $value);
     }
 
     /**
      * @throws InvalidRequestException
      */
-    public function sendData($data)
+    public function getCustomer(): array
     {
-        try {
-            $paymentResponse = call_user_func([$this->getClient(), 'createPayment'], $data);
+        $customer = $this->getParameter('customer');
 
-            return $this->response = new PurchaseResponse($this, $paymentResponse);
-        } catch (Throwable $e) {
-            throw new InvalidRequestException('Failed to request purchase: ' . $e->getMessage(), 0, $e);
+        if(!$customer instanceof Customer){
+            throw new InvalidRequestException("The customer parameter is required");
         }
+
+        return $customer->validated();
     }
 
 
-    protected function getClient(): Client
+    public function setCustomer(Customer $value): self
     {
-        return (new Client())->setAuth($this->getShopId(), $this->getSecret());
+        return $this->setParameter('customer', $value);
     }
 
 
-    private function makeIdempotencyKey($data): string
+    public function getItems(): array
     {
-        return md5(json_encode($data));
+        return array_map(function (Item $item) {
+            return [
+                'description' => $item->getDescription(),
+                'quantity' => $item->getQuantity(),
+                'amount' => [
+                    'value' => round($item->getPrice(), 2),
+                    'currency' => $this->getCurrency(),
+                ],
+                'vat_code' => $item->getVatCode(),
+                'payment_mode' => $item->getPaymentMode(),
+                'payment_subject' => $item->getPaymentSubject(),
+            ];
+        }, parent::getItems()->all());
+    }
+
+
+    /**
+     * @throws InvalidRequestException
+     */
+    public function getData(): array
+    {
+        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description', 'items', 'customer');
+
+        return [
+            'amount' => [
+                'value' => $this->getAmount(),
+                'currency' => $this->getCurrency(),
+            ],
+            'description' => $this->getDescription(),
+            'confirmation' => [
+                'type' => 'redirect',
+                'locale' => $this->getLocale(),
+                'return_url' => $this->getReturnUrl(),
+            ],
+            'capture' => $this->getCapture(),
+            'metadata' => [
+                'transactionId' => $this->getTransactionId(),
+            ],
+            'receipt' => [
+                'customer' => $this->getCustomer(),
+                'items' => $this->getItems(),
+            ],
+        ];
     }
 }

@@ -5,6 +5,7 @@ namespace Omnipay\YooKassa\Tests;
 
 use Omnipay\Tests\GatewayTestCase;
 use Omnipay\YooKassa\Gateway;
+use Omnipay\YooKassa\Message\PurchaseRequest;
 
 
 class GatewayTest extends GatewayTestCase
@@ -30,5 +31,16 @@ class GatewayTest extends GatewayTestCase
     {
         $this->assertSame($this->shopId, $this->gateway->getShopId());
         $this->assertSame($this->secretKey, $this->gateway->getSecret());
+    }
+
+
+    public function testSupportsPurchase()
+    {
+        $supportsPurchase = $this->gateway->supportsPurchase();
+        $this->assertTrue($supportsPurchase);
+
+        if ($supportsPurchase) {
+            $this->assertInstanceOf(PurchaseRequest::class, $this->gateway->purchase());
+        }
     }
 }
