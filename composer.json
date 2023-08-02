@@ -1,0 +1,47 @@
+{
+  "name": "trpl2alex14/heatvolt-yookassa",
+  "type": "library",
+  "description": "src driver for Omnipay payment processing library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alex",
+      "email": "trp2alex14@bk.ru"
+    }
+  ],
+  "keywords": [
+    "php",
+    "omnipay",
+    "yookassa",
+    "yandex-kassa",
+    "merchant",
+    "payment"
+  ],
+  "require": {
+    "php": "^8.0.2",
+    "omnipay/common": "^3",
+    "ext-json": "*",
+    "yoomoney/yookassa-sdk-php": "^2.0",
+    "symfony/http-client": "6.4.x-dev",
+    "php-http/httplug": "2.x-dev",
+    "nyholm/psr7": "^1.8@dev"
+  },
+  "require-dev": {
+    "omnipay/tests": "^4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Omnipay\\YooKassa\\": "src",
+      "Omnipay\\YooKassa\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "phpunit --testdox tests"
+  },
+  "minimum-stability": "dev",
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
+}
