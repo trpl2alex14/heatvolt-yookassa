@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\YooKassa;
+namespace Omnipay\YooKassa\Trait;
 
 
 trait LocaleParametersTrait

@@ -46,4 +46,11 @@ class GatewayTest extends GatewayTestCase
             $this->assertInstanceOf(PurchaseRequest::class, $this->gateway->purchase());
         }
     }
+
+
+    public function testPurchaseDefaultParameters()
+    {
+        $request =  $this->gateway->purchase();
+        $this->assertTrue($request->getCapture());
+    }
 }

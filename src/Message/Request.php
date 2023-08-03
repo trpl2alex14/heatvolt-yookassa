@@ -4,7 +4,7 @@ namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
-use Omnipay\YooKassa\AuthParametersTrait;
+use Omnipay\YooKassa\Trait\AuthParametersTrait;
 use RuntimeException;
 use Throwable;
 use YooKassa\Client;

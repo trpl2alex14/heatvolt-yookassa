@@ -5,28 +5,15 @@ namespace Omnipay\YooKassa\Message;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\YooKassa\Customer;
 use Omnipay\YooKassa\Item;
-use Omnipay\YooKassa\LocaleParametersTrait;
+use Omnipay\YooKassa\Trait\CaptureParametersTrait;
+use Omnipay\YooKassa\Trait\LocaleParametersTrait;
 
 
 class PurchaseRequest extends Request
 {
-    use LocaleParametersTrait;
+    use LocaleParametersTrait, CaptureParametersTrait;
 
     protected string|null $method = 'createPayment';
-
-
-    public function getCapture()
-    {
-        $capture = $this->getParameter('capture');
-
-        return $capture === null ? true : $capture;
-    }
-
-
-    public function setCapture($value): self
-    {
-        return $this->setParameter('capture', $value);
-    }
 
 
     public function setVatCode($value)
