@@ -14,6 +14,7 @@ nbproject
 # composer internals
 /composer.lock
 /vendor
+/log
 
 # phpunit generated files
 coverage.clover
@@ -22,3 +23,4 @@ coverage.clover
 composer.phar
 phpunit-skelgen.phar
 phpunit.phar
+/.phpunit.result.cache

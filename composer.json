@@ -27,7 +27,8 @@
     "nyholm/psr7": "^1.8@dev"
   },
   "require-dev": {
-    "omnipay/tests": "^4"
+    "omnipay/tests": "^4",
+    "phpunit/php-code-coverage": "9.2.x-dev"
   },
   "autoload": {
     "psr-4": {
@@ -36,7 +37,7 @@
     }
   },
   "scripts": {
-    "test": "phpunit --testdox tests"
+    "test": "phpunit --testdox"
   },
   "minimum-stability": "dev",
   "config": {

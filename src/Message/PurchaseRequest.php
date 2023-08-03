@@ -28,6 +28,18 @@ class PurchaseRequest extends Request
         return $this->setParameter('capture', $value);
     }
 
+
+    public function setVatCode($value)
+    {
+        return $this->setParameter('vatCode', $value);
+    }
+
+
+    public function getVatCode()
+    {
+        return $this->getParameter('vatCode');
+    }
+
     /**
      * @throws InvalidRequestException
      */
@@ -48,10 +60,18 @@ class PurchaseRequest extends Request
         return $this->setParameter('customer', $value);
     }
 
-
+    /**
+     * @throws InvalidRequestException
+     */
     public function getItems(): array
     {
         return array_map(function (Item $item) {
+            $item->validate('description', 'quantity', 'price');
+
+            if(!$item->getVatCode() && !$this->getVatCode()){
+                throw new InvalidRequestException("The VatCode parameter is required");
+            }
+
             return [
                 'description' => $item->getDescription(),
                 'quantity' => $item->getQuantity(),
@@ -59,22 +79,21 @@ class PurchaseRequest extends Request
                     'value' => round($item->getPrice(), 2),
                     'currency' => $this->getCurrency(),
                 ],
-                'vat_code' => $item->getVatCode(),
+                'vat_code' => $item->getVatCode() ?: $this->getVatCode(),
                 'payment_mode' => $item->getPaymentMode(),
                 'payment_subject' => $item->getPaymentSubject(),
             ];
         }, parent::getItems()->all());
     }
 
-
     /**
      * @throws InvalidRequestException
      */
     public function getData(): array
     {
-        $this->validate('amount', 'currency', 'returnUrl', 'transactionId', 'description', 'items', 'customer');
+        $this->validate('amount', 'currency', 'returnUrl', 'description');
 
-        return [
+        $data = [
             'amount' => [
                 'value' => $this->getAmount(),
                 'currency' => $this->getCurrency(),
@@ -82,17 +101,28 @@ class PurchaseRequest extends Request
             'description' => $this->getDescription(),
             'confirmation' => [
                 'type' => 'redirect',
-                'locale' => $this->getLocale(),
                 'return_url' => $this->getReturnUrl(),
             ],
             'capture' => $this->getCapture(),
-            'metadata' => [
+        ];
+
+        if($this->getParameter('locale')){
+            $data['confirmation']['locale'] = $this->getLocale();
+        }
+
+        if($this->getParameter('transactionId')){
+            $data['metadata'] = [
                 'transactionId' => $this->getTransactionId(),
-            ],
-            'receipt' => [
+            ];
+        }
+
+        if($this->getParameter('customer') && $this->getParameter('items')){
+            $data['receipt'] = [
                 'customer' => $this->getCustomer(),
                 'items' => $this->getItems(),
-            ],
-        ];
+            ];
+        }
+
+        return $data;
     }
 }

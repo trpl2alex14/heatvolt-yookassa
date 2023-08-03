@@ -6,6 +6,7 @@ namespace Omnipay\YooKassa\Tests;
 use Omnipay\Tests\GatewayTestCase;
 use Omnipay\YooKassa\Gateway;
 use Omnipay\YooKassa\Message\PurchaseRequest;
+use YooKassa\Model\Locale;
 
 
 class GatewayTest extends GatewayTestCase
@@ -23,7 +24,8 @@ class GatewayTest extends GatewayTestCase
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
         $this->gateway->setTestMode(true)
             ->setShopId($this->shopId)
-            ->setSecret($this->secretKey);
+            ->setSecret($this->secretKey)
+            ->setLocale(Locale::RUSSIAN);
     }
 
 
@@ -31,6 +33,7 @@ class GatewayTest extends GatewayTestCase
     {
         $this->assertSame($this->shopId, $this->gateway->getShopId());
         $this->assertSame($this->secretKey, $this->gateway->getSecret());
+        $this->assertSame(Locale::RUSSIAN, $this->gateway->getLocale());
     }
 
 
