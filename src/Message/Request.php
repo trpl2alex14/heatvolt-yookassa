@@ -43,9 +43,15 @@ abstract class Request extends AbstractRequest
 
         try {
             $parameters = [$data];
+            if(method_exists($this, 'getPaymentId')){
+                $parameters[] = $this->getPaymentId();
+            }
+
             if($this->idempotencyRequest){
                 $parameters[] = $this->getIdempotencyKey() ?: $this->makeIdempotencyKey();
             }
+
+            $parameters = array_filter($parameters);
 
             $paymentResponse = call_user_func(
                 [$this->getClient(), $this->method],

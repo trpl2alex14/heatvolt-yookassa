@@ -22,7 +22,8 @@ class DetailsRequestTest extends AbstractRequestTest
 
         $data = $this->request->getData();
 
-        $this->assertSame($this->paymentId, $data);
+        $this->assertNull($data);
+        $this->assertSame($this->paymentId, $this->request->getPaymentId());
     }
 
 

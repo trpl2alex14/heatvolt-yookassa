@@ -3,25 +3,16 @@
 namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\YooKassa\Trait\PaymentIdParametersTrait;
 
 
 class DetailsRequest extends Request
 {
+    use PaymentIdParametersTrait;
+
     protected string|null $method = 'getPaymentInfo';
 
     protected bool $idempotencyRequest = false;
-
-
-    public function setPaymentId($value)
-    {
-        return $this->setParameter('paymentId', $value);
-    }
-
-
-    public function getPaymentId()
-    {
-        return $this->getParameter('paymentId');
-    }
 
     /**
      * @throws InvalidRequestException
@@ -30,6 +21,6 @@ class DetailsRequest extends Request
     {
         $this->validate('paymentId');
 
-        return $this->getPaymentId();
+        return null;
     }
 }
