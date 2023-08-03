@@ -18,6 +18,8 @@ abstract class Request extends AbstractRequest
 
     protected Client|null $client = null;
 
+    protected bool $idempotencyRequest = true;
+
 
     public function setIdempotencyKey($value): Request
     {
@@ -33,19 +35,24 @@ abstract class Request extends AbstractRequest
     /**
      * @throws InvalidRequestException
      */
-    public function sendData($data): PurchaseResponse
+    public function sendData($data): PaymentResponse
     {
-        if(!$this->method){
+        if (!$this->method) {
             throw new RuntimeException('You must set call method name before accessing the Response!');
         }
 
         try {
+            $parameters = [$data];
+            if($this->idempotencyRequest){
+                $parameters[] = $this->getIdempotencyKey() ?: $this->makeIdempotencyKey();
+            }
+
             $paymentResponse = call_user_func(
                 [$this->getClient(), $this->method],
-                $data, $this->getIdempotencyKey() ?: $this->makeIdempotencyKey()
+                ...$parameters
             );
 
-            return $this->response = new PurchaseResponse($this, $paymentResponse);
+            return $this->response = new PaymentResponse($this, $paymentResponse);
         } catch (Throwable $e) {
             throw new InvalidRequestException('Failed to request purchase: ' . $e->getMessage(), 0, $e);
         }

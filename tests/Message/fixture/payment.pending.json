@@ -13,7 +13,9 @@
   },
   "created_at": "2018-07-18T10:51:18.139Z",
   "description": "Test purchase description",
-  "metadata": {},
+  "metadata": {
+    "transactionId": "sdfdsfdsf34234"
+  },
   "payment_method": {
     "type": "bank_card",
     "id": "22e12f66-000f-5000-8000-18db351245c7",
