@@ -15,7 +15,6 @@ class PurchaseRequestTest extends AbstractRequestTest
 
     /**
      * @dataProvider provider
-     * @throws InvalidRequestException
      */
     public function testGetData($parameters, $customer, $item)
     {

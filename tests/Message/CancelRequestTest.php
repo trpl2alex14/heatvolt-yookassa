@@ -2,7 +2,6 @@
 
 namespace Omnipay\YooKassa\Tests\Message;
 
-use DateTime;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\YooKassa\Message\CancelRequest;
 use Omnipay\YooKassa\Message\PaymentResponse;
@@ -47,7 +46,7 @@ class CancelRequestTest extends AbstractRequestTest
         $response = $this->sendMockRequest($this->request, 'payment.canceled');
         $this->assertInstanceOf(PaymentResponse::class, $response);
 
-        if($response instanceof PaymentResponse) {
+        if ($response instanceof PaymentResponse) {
             $this->assertTrue($response->isSuccessful());
             $this->assertSame($this->paymentId, $response->getPaymentId());
             $this->assertTrue($response->isCancelled());

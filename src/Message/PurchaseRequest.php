@@ -13,7 +13,7 @@ class PurchaseRequest extends Request
 {
     use LocaleParametersTrait, CaptureParametersTrait;
 
-    protected string|null $method = 'createPayment';
+    protected ?string $method = 'createPayment';
 
 
     public function setVatCode($value)
