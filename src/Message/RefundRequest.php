@@ -14,7 +14,7 @@ class RefundRequest extends PurchaseRequest
 
     protected string $responseClass = RefundResponse::class;
 
-    protected bool $needPaymentId = false;
+    protected bool $needId = false;
 
 
     public function getCapture()

@@ -23,8 +23,7 @@ abstract class Request extends AbstractRequest
 
     protected bool $idempotencyRequest = true;
 
-    protected bool $needPaymentId = true;
-
+    protected bool $needId = true;
 
 
     public function setIdempotencyKey($value): Request
@@ -49,8 +48,10 @@ abstract class Request extends AbstractRequest
 
         try {
             $parameters = [$data];
-            if (method_exists($this, 'getPaymentId') && $this->needPaymentId) {
+            if (method_exists($this, 'getPaymentId') && $this->needId) {
                 $parameters[] = $this->getPaymentId();
+            } elseif (method_exists($this, 'getId') && $this->needId) {
+                $parameters[] = $this->getId();
             }
 
             if ($this->idempotencyRequest) {
