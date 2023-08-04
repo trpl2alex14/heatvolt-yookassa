@@ -4,6 +4,7 @@ namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\YooKassa\Trait\AuthParametersTrait;
 use RuntimeException;
 use Throwable;
@@ -16,9 +17,14 @@ abstract class Request extends AbstractRequest
 
     protected string|null $method = null;
 
+    protected string $responseClass = PaymentResponse::class;
+
     protected Client|null $client = null;
 
     protected bool $idempotencyRequest = true;
+
+    protected bool $needPaymentId = true;
+
 
 
     public function setIdempotencyKey($value): Request
@@ -35,7 +41,7 @@ abstract class Request extends AbstractRequest
     /**
      * @throws InvalidRequestException
      */
-    public function sendData($data): PaymentResponse
+    public function sendData($data): AbstractResponse
     {
         if (!$this->method) {
             throw new RuntimeException('You must set call method name before accessing the Response!');
@@ -43,11 +49,11 @@ abstract class Request extends AbstractRequest
 
         try {
             $parameters = [$data];
-            if(method_exists($this, 'getPaymentId')){
+            if (method_exists($this, 'getPaymentId') && $this->needPaymentId) {
                 $parameters[] = $this->getPaymentId();
             }
 
-            if($this->idempotencyRequest){
+            if ($this->idempotencyRequest) {
                 $parameters[] = $this->getIdempotencyKey() ?: $this->makeIdempotencyKey();
             }
 
@@ -58,9 +64,9 @@ abstract class Request extends AbstractRequest
                 ...$parameters
             );
 
-            return $this->response = new PaymentResponse($this, $paymentResponse);
+            return $this->response = new $this->responseClass($this, $paymentResponse);
         } catch (Throwable $e) {
-            throw new InvalidRequestException('Failed to request purchase: ' . $e->getMessage(), 0, $e);
+            throw new InvalidRequestException('Failed to request: ' . $e->getMessage(), 0, $e);
         }
     }
 
