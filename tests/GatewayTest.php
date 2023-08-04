@@ -5,7 +5,12 @@ namespace Omnipay\YooKassa\Tests;
 
 use Omnipay\Tests\GatewayTestCase;
 use Omnipay\YooKassa\Gateway;
+use Omnipay\YooKassa\Message\CancelRequest;
+use Omnipay\YooKassa\Message\CaptureRequest;
+use Omnipay\YooKassa\Message\DetailsRequest;
 use Omnipay\YooKassa\Message\PurchaseRequest;
+use Omnipay\YooKassa\Message\ReceiptDetailsRequest;
+use Omnipay\YooKassa\Message\RefundRequest;
 use YooKassa\Model\Locale;
 
 
@@ -52,5 +57,60 @@ class GatewayTest extends GatewayTestCase
     {
         $request =  $this->gateway->purchase();
         $this->assertTrue($request->getCapture());
+    }
+
+
+    public function testSupportsCancel()
+    {
+        $supports = $this->gateway->supportsCancel();
+        $this->assertTrue($supports);
+
+        if ($supports) {
+            $this->assertInstanceOf(CancelRequest::class, $this->gateway->cancel());
+        }
+    }
+
+
+    public function testSupportsCapture()
+    {
+        $supports = $this->gateway->supportsCapture();
+        $this->assertTrue($supports);
+
+        if ($supports) {
+            $this->assertInstanceOf(CaptureRequest::class, $this->gateway->capture());
+        }
+    }
+
+
+    public function testSupportsDetails()
+    {
+        $supports = $this->gateway->supportsFetchTransaction();
+        $this->assertTrue($supports);
+
+        if ($supports) {
+            $this->assertInstanceOf(DetailsRequest::class, $this->gateway->fetchTransaction());
+        }
+    }
+
+
+    public function testSupportsReceiptDetails()
+    {
+        $supports = $this->gateway->supportsFetchReceipt();
+        $this->assertTrue($supports);
+
+        if ($supports) {
+            $this->assertInstanceOf(ReceiptDetailsRequest::class, $this->gateway->fetchReceipt());
+        }
+    }
+
+
+    public function testSupportsRefund()
+    {
+        $supports = $this->gateway->supportsRefund();
+        $this->assertTrue($supports);
+
+        if ($supports) {
+            $this->assertInstanceOf(RefundRequest::class, $this->gateway->refund());
+        }
     }
 }

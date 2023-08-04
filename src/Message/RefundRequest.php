@@ -16,18 +16,6 @@ class RefundRequest extends PurchaseRequest
 
     protected bool $needId = false;
 
-
-    public function getCapture()
-    {
-        return null;
-    }
-
-
-    public function setCapture($value): self
-    {
-        return $this;
-    }
-
     /**
      * @throws InvalidRequestException
      */
