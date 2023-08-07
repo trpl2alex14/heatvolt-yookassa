@@ -10,6 +10,7 @@ use Omnipay\YooKassa\Message\CaptureRequest;
 use Omnipay\YooKassa\Message\DetailsRequest;
 use Omnipay\YooKassa\Message\PurchaseRequest;
 use Omnipay\YooKassa\Message\ReceiptDetailsRequest;
+use Omnipay\YooKassa\Message\ReceiptsRequest;
 use Omnipay\YooKassa\Message\RefundRequest;
 use YooKassa\Model\Locale;
 
@@ -55,7 +56,7 @@ class GatewayTest extends GatewayTestCase
 
     public function testPurchaseDefaultParameters()
     {
-        $request =  $this->gateway->purchase();
+        $request = $this->gateway->purchase();
         $this->assertTrue($request->getCapture());
     }
 
@@ -111,6 +112,17 @@ class GatewayTest extends GatewayTestCase
 
         if ($supports) {
             $this->assertInstanceOf(RefundRequest::class, $this->gateway->refund());
+        }
+    }
+
+
+    public function testSupportsReceipts()
+    {
+        $supports = $this->gateway->supportsFetchReceipts();
+        $this->assertTrue($supports);
+
+        if ($supports) {
+            $this->assertInstanceOf(ReceiptsRequest::class, $this->gateway->fetchReceipts());
         }
     }
 }

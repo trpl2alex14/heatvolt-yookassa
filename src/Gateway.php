@@ -9,6 +9,7 @@ use Omnipay\YooKassa\Message\CaptureRequest;
 use Omnipay\YooKassa\Message\DetailsRequest;
 use Omnipay\YooKassa\Message\PurchaseRequest;
 use Omnipay\YooKassa\Message\ReceiptDetailsRequest;
+use Omnipay\YooKassa\Message\ReceiptsRequest;
 use Omnipay\YooKassa\Message\RefundRequest;
 use Omnipay\YooKassa\Trait\AuthParametersTrait;
 use Omnipay\YooKassa\Trait\CaptureParametersTrait;
@@ -80,5 +81,17 @@ class Gateway extends AbstractGateway
     public function fetchReceipt(array $options = []): RequestInterface
     {
         return $this->createRequest(ReceiptDetailsRequest::class, $options);
+    }
+
+
+    public function supportsFetchReceipts()
+    {
+        return method_exists($this, 'fetchReceipts');
+    }
+
+
+    public function fetchReceipts(array $options = []): RequestInterface
+    {
+        return $this->createRequest(ReceiptsRequest::class, $options);
     }
 }
