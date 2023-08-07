@@ -44,19 +44,19 @@ class PaymentResponse extends AbstractResponse implements RedirectResponseInterf
 
     public function isRedirect()
     {
-        return $this->getData()->getConfirmation()->getType() === ConfirmationType::REDIRECT;
+        return $this->getData()->getConfirmation()?->getType() === ConfirmationType::REDIRECT;
     }
 
 
     public function getRedirectUrl()
     {
-        return $this->getData()->getConfirmation()->getConfirmationUrl();
+        return $this->getData()->getConfirmation()?->getConfirmationUrl();
     }
 
 
     public function getRedirectData()
     {
-        return $this->getData()->getConfirmation()->getConfirmationData();
+        return $this->getData()->getConfirmation()?->getConfirmationData();
     }
 
 
