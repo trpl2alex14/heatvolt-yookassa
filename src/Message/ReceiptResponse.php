@@ -116,7 +116,7 @@ class ReceiptResponse extends AbstractResponse
             });
         }
 
-        return $amount;
+        return $amount ?: 0;
     }
 
     /**
