@@ -41,7 +41,7 @@ class CancelRequestTest extends AbstractRequestTest
      */
     public function testSendData()
     {
-        $this->request->initialize(['paymentId' => $this->paymentId]);
+        $this->request->initialize(['paymentId' => $this->paymentId, 'shopId' => $this->shopId, 'secret' => $this->secretKey]);
 
         $response = $this->sendMockRequest($this->request, 'payment.canceled');
         $this->assertInstanceOf(PaymentResponse::class, $response);

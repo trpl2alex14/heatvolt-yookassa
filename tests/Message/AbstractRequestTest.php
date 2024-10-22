@@ -15,7 +15,7 @@ use TypeError;
 use YooKassa\Client;
 use YooKassa\Client\CurlClient;
 use YooKassa\Model\CurrencyCode;
-use YooKassa\Model\Locale;
+use YooKassa\Request\Payments\Locale;
 use YooKassa\Model\Receipt\PaymentMode;
 use YooKassa\Model\Receipt\PaymentSubject;
 
@@ -26,8 +26,8 @@ abstract class AbstractRequestTest extends TestCase
 
     protected string $requestName;
 
-    protected string $shopId = '1';
-    protected string $secretKey = 'test_1';
+    protected string $shopId = '239572';
+    protected string $secretKey = 'test_CE99VzHivJoYF8Ia-T0YS3VoJgkWryXIXqBcqQY7dk4';
 
     protected string $currency = CurrencyCode::RUB;
     protected int $vatCode = VatCode::NOT_VAT;
@@ -76,6 +76,8 @@ abstract class AbstractRequestTest extends TestCase
         return [
             'payment 1' => [
                 [
+                    'shopId' => $this->shopId,
+                    'secret' => $this->secretKey,
                     'locale' => Locale::RUSSIAN,
                     'transactionId' => 'sdfdsfdsf34234',
                     'amount' => 155,
@@ -91,6 +93,8 @@ abstract class AbstractRequestTest extends TestCase
             ],
             'payment 2' => [
                 [
+                    'shopId' => $this->shopId,
+                    'secret' => $this->secretKey,
                     'locale' => Locale::RUSSIAN,
                     'amount' => 31,
                     'currency' => $this->currency,

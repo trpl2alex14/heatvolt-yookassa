@@ -12,7 +12,7 @@ use Omnipay\YooKassa\Message\PurchaseRequest;
 use Omnipay\YooKassa\Message\ReceiptDetailsRequest;
 use Omnipay\YooKassa\Message\ReceiptsRequest;
 use Omnipay\YooKassa\Message\RefundRequest;
-use YooKassa\Model\Locale;
+use YooKassa\Request\Payments\Locale;
 
 
 class GatewayTest extends GatewayTestCase

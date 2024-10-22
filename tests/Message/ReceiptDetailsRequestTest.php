@@ -41,7 +41,7 @@ class ReceiptDetailsRequestTest extends AbstractRequestTest
      */
     public function testSendData()
     {
-        $this->request->initialize(['receiptId' => $this->id]);
+        $this->request->initialize(['receiptId' => $this->id, 'shopId' => $this->shopId, 'secret' => $this->secretKey]);
 
         $response = $this->sendMockRequest($this->request, 'receipt.succeeded');
         $this->assertInstanceOf(ReceiptResponse::class, $response);

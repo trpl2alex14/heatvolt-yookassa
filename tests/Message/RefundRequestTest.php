@@ -69,6 +69,8 @@ class RefundRequestTest extends PurchaseRequestTest
         return [
             'payment 1' => [
                 [
+                    'shopId' => $this->shopId,
+                    'secret' => $this->secretKey,
                     'payment_id' => '216749f7-0016-50be-b000-078d43a63ae4',
                     'amount' => 155,
                     'currency' => $this->currency,
@@ -82,6 +84,8 @@ class RefundRequestTest extends PurchaseRequestTest
             ],
             'payment 2' => [
                 [
+                    'shopId' => $this->shopId,
+                    'secret' => $this->secretKey,
                     'payment_id' => '216749f7-0016-50be-b000-078d43a63ae4',
                     'amount' => 31,
                     'currency' => $this->currency,

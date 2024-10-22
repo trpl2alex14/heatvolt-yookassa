@@ -3,11 +3,14 @@
 namespace Omnipay\YooKassa\Message;
 
 use DateTime;
+use Omnipay\Common\ItemInterface;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\YooKassa\Item;
-use YooKassa\Model\ReceiptRegistrationStatus;
-use YooKassa\Model\ReceiptType;
-use YooKassa\Model\SettlementInterface;
+use Omnipay\YooKassa\ItemDetails;
+use YooKassa\Common\ListObject;
+use YooKassa\Model\Payment\ReceiptRegistrationStatus;
+use YooKassa\Model\Receipt\ReceiptType;
+use YooKassa\Model\Receipt\SettlementInterface;
 use YooKassa\Request\Receipts\AbstractReceiptResponse;
 use YooKassa\Request\Receipts\ReceiptResponseItem;
 
@@ -114,6 +117,12 @@ class ReceiptResponse extends AbstractResponse
             $amount = array_reduce($settlements, function ($sum, SettlementInterface $item) {
                 return $sum + round($item->getAmount()->getIntegerValue() / 100, 2);
             });
+        }elseif($settlements instanceof ListObject){
+            foreach ($settlements->getItems() as $item) {
+                if($item instanceof SettlementInterface) {
+                    $amount += round($item->getAmount()->getIntegerValue() / 100, 2);
+                }
+            }
         }
 
         return $amount ?: 0;
@@ -126,18 +135,31 @@ class ReceiptResponse extends AbstractResponse
     {
         $receiptItems = $this->getData()->getItems();
 
-        if (!is_array($receiptItems)) {
-            return null;
+        $result = [];
+        if (is_array($receiptItems)) {
+            return array_map(function (ReceiptResponseItem $item) {
+                return $this->makeItem($item);
+            }, $receiptItems);
+        }elseif($receiptItems instanceof ListObject){
+            foreach ($receiptItems->getItems() as $item) {
+                if($item instanceof ReceiptResponseItem) {
+                    $result[] = $this->makeItem($item);
+                }
+            }
         }
 
-        return array_map(function (ReceiptResponseItem $item) {
-            return (new Item())
-                ->setVatCode($item->getVatCode())
-                ->setPaymentMode($item->getPaymentMode())
-                ->setPaymentSubject($item->getPaymentSubject())
-                ->setDescription($item->getDescription())
-                ->setPrice(round($item->getAmount() / 100, 2))
-                ->setQuantity($item->getQuantity());
-        }, $receiptItems);
+        return $result;
+    }
+
+
+    private function makeItem(mixed $item): ItemInterface
+    {
+        return (new Item())
+            ->setVatCode($item->getVatCode())
+            ->setPaymentMode($item->getPaymentMode())
+            ->setPaymentSubject($item->getPaymentSubject())
+            ->setDescription($item->getDescription())
+            ->setPrice(round($item->getAmount() / 100, 2))
+            ->setQuantity($item->getQuantity());
     }
 }

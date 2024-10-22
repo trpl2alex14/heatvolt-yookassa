@@ -3,7 +3,6 @@
 namespace Omnipay\YooKassa\Message;
 
 use DateTime;
-use DateTimeInterface;
 use Omnipay\YooKassa\Trait\PaymentIdParametersTrait;
 
 
@@ -58,7 +57,7 @@ class ReceiptsRequest extends Request
 
     public function setCreatedAt(?DateTime $value, $operator = '=')
     {
-        if(is_null($value)){
+        if (is_null($value)) {
             return $this->setParameter('created_at', []);
         }
 

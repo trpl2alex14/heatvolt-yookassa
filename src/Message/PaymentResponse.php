@@ -5,9 +5,9 @@ namespace Omnipay\YooKassa\Message;
 use DateTime;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
-use YooKassa\Model\ConfirmationType;
-use YooKassa\Model\PaymentInterface;
-use YooKassa\Model\PaymentStatus;
+use YooKassa\Model\Payment\ConfirmationType;
+use YooKassa\Model\Payment\PaymentInterface;
+use YooKassa\Model\Payment\PaymentStatus;
 
 
 class PaymentResponse extends AbstractResponse implements RedirectResponseInterface

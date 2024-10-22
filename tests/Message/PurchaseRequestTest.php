@@ -2,11 +2,10 @@
 
 namespace Omnipay\YooKassa\Tests\Message;
 
-use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\YooKassa\Message\PaymentResponse;
 use Omnipay\YooKassa\Message\PurchaseRequest;
 use ReflectionException;
-use YooKassa\Model\Locale;
+use YooKassa\Request\Payments\Locale;
 
 
 class PurchaseRequestTest extends AbstractRequestTest

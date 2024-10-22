@@ -4,8 +4,8 @@ namespace Omnipay\YooKassa\Message;
 
 use DateTime;
 use Omnipay\Common\Message\AbstractResponse;
-use YooKassa\Model\RefundInterface;
-use YooKassa\Model\RefundStatus;
+use YooKassa\Model\Refund\RefundInterface;
+use YooKassa\Model\Refund\RefundStatus;
 
 
 class RefundResponse extends AbstractResponse

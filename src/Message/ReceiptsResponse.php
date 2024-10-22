@@ -3,6 +3,7 @@
 namespace Omnipay\YooKassa\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
+use YooKassa\Common\ListObject;
 use YooKassa\Request\Receipts\ReceiptResponseInterface;
 use YooKassa\Request\Receipts\ReceiptsResponse as YooKassaReceiptsResponse;
 
@@ -39,12 +40,17 @@ class ReceiptsResponse extends AbstractResponse
     public function getItems(): array
     {
         $items = $this->getData()->getItems();
-        if (!is_array($items) || count($items) === 0) {
+        if(!($items instanceof ListObject)){
             return [];
         }
 
-        return array_map(function (ReceiptResponseInterface $item) {
-            return new ReceiptResponse($this->getRequest(), $item);
-        }, $items);
+        $result = [];
+        foreach ($items->getItems() as $item) {
+            if($item instanceof ReceiptResponseInterface) {
+                $result[] = new ReceiptResponse($this->getRequest(), $item);
+            }
+        }
+
+        return $result;
     }
 }

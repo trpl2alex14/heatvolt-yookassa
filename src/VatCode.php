@@ -19,7 +19,7 @@ class VatCode  extends AbstractEnum
 
     const VAT_20_120 = 6;
 
-    protected static $validValues = array(
+    protected static array $validValues = array(
         self::NOT_VAT => true,
         self::VAT_0 => true,
         self::VAT_10 => true,

@@ -21,7 +21,7 @@
     "php": "^8.0.2",
     "omnipay/common": "^3",
     "ext-json": "*",
-    "yoomoney/yookassa-sdk-php": "^2.0",
+    "yoomoney/yookassa-sdk-php": "^3.0",
     "symfony/http-client": "6.4.x-dev",
     "php-http/httplug": "2.x-dev",
     "nyholm/psr7": "^1.8@dev"
